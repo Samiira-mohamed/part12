@@ -1,0 +1,12 @@
+$ docker start -i xenodochial_chaum
+root@c7a8b406cfd6:/# apt-get update
+...
+Reading package lists... Done
+root@c7a8b406cfd6:/# apt-get -y install nano
+...
+Setting up nano (8.7.1-1ubuntu0.1) ...
+root@c7a8b406cfd6:/# nano /usr/src/app/index.js
+root@c7a8b406cfd6:/# cat /usr/src/app/index.js
+console.log('Hello World')
+root@c7a8b406cfd6:/# exit
+exit
