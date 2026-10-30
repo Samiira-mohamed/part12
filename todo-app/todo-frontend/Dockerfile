@@ -1,10 +1,18 @@
-FROM node:24 AS build-stage
+FROM node:24 AS test-stage
 
 WORKDIR /usr/src/app
 
 COPY . .
 
 RUN npm ci
+
+RUN npm test
+
+FROM node:24 AS build-stage
+
+WORKDIR /usr/src/app
+
+COPY --from=test-stage /usr/src/app .
 
 ENV VITE_BACKEND_URL=https://dark-phantasm-p7gj44px7vxc654p-3000.app.github.dev
 
