@@ -10,6 +10,36 @@ services:
       - VITE_BACKEND_URL=https://dark-phantasm-p7gj44px7vxc654p-3000.app.github.dev
     container_name: todo-frontend-dev
 
+  server:
+    image: todo-back-dev
+    build:
+      context: ./todo-backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-backend/:/usr/src/app
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+    depends_on:
+      - mongo
+      - redis
+    container_name: todo-backend-dev
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: the_database
+    volumes:
+      - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+
+  redis:
+    image: redis
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - ./todo-backend/redis_data:/data
+
   nginx:
     image: nginx:1.29
     volumes:
@@ -19,3 +49,4 @@ services:
     container_name: reverse-proxy
     depends_on:
       - app
+      - server
